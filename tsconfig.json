@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "module": "commonjs", // Use "esnext" if you're using ES module imports
+    "moduleResolution": "node", // Important for resolving node modules
+    "esModuleInterop": true, // Enables default import interoperability with CommonJS
+    "outDir": "./dist",
+    "strict": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules"]
+}
