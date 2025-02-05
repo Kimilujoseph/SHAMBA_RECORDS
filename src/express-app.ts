@@ -10,7 +10,7 @@ const App = async (app: Application): Promise<void> => {
   //   app.use(
   //     cors({
   //       origin: ["*"],
-  //       credentials: true,
+  //       credentials: true
   //     })
   //   );
   app.use(ErrorHandler);

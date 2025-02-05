@@ -1,5 +1,10 @@
 import { ApiError, statusCode } from "./error-interface";
 
+
+//this really confuses but here is brief expenation of whats going on
+//am trying to create a custom error handling called AppError
+//normally we handle error as new Error("")
+//with extend am inherinting the built in js Error
 class AppError extends Error implements ApiError {
   name: string;
   statusCode: number;
@@ -7,8 +12,7 @@ class AppError extends Error implements ApiError {
   isOperational: boolean;
   errorStack: string;
   logingErrorResponse: boolean;
-  //the constructor initialize  the error and assigns them
-  //to the instance
+
   constructor(
     name: string,
     statusCode: number,
@@ -17,7 +21,7 @@ class AppError extends Error implements ApiError {
     errorStack = "",
     logingErrorResponse = false
   ) {
-    super(description);
+    super(description);//it will call the parent class Error() and pass the message right??
     Object.setPrototypeOf(this, new.target.prototype);
     this.name = name;
     this.statusCode = statusCode;

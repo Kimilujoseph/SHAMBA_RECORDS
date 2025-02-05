@@ -31,19 +31,19 @@ const tripSchema = new mongoose.Schema(
       required: true,
     },
     emissionFactor: {
-      type: Number, //calculated based on the vehicle type and fuel efficiency
+      type: Number,
     },
     directEmissions: {
       type: Number,
-      default: 0, // calculated based on avoided trips and their estimated emission
+      default: 0,
     },
     indirectedEmission: {
       type: Number,
-      default: 0, //calculated base on avoided trips and their estimated emission
+      default: 0,
     },
     netEmissions: {
       type: Number,
-      default: 0, //caculated  as directEmmissionss - indirectEmmission
+      default: 0,
     },
     carbonCreditsAwarded: {
       type: Number,
