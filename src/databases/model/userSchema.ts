@@ -1,23 +1,17 @@
 import mongoose, { Document, Schema } from "mongoose";
 
-enum userRole {
-  Passenger = "passenger",
-  Driver = "driver",
-  Student = "student",
-}
-
 interface UserInterface extends Document {
   name: string;
   email: string;
   password: string;
-  role: userRole;
+  role: string;
   driverInfo?: {
     licencePicInfront: string;
     licencePicBackWard: string;
     numberPlate: string;
     vehicleId: Object;
   };
-  profilePic: string;
+  profilePic?: string;
 }
 
 const userSchema = new Schema<UserInterface>(
@@ -39,7 +33,6 @@ const userSchema = new Schema<UserInterface>(
     },
     role: {
       type: String,
-      enum: Object.values(userRole),
       required: true,
     },
     driverInfo: {

@@ -1,6 +1,8 @@
 import express, { Application } from "express";
 //import cors from "cors";
 import { ErrorHandler } from "./utils/error_handler";
+import userroutes from "./API/router/usermanagement";
+import setupSwagger from "./config/swagger";
 import * as dotenv from "dotenv";
 dotenv.config();
 
@@ -13,6 +15,8 @@ const App = async (app: Application): Promise<void> => {
   //       credentials: true
   //     })
   //   );
+  setupSwagger(app);
+  app.use("/api/v1/user", userroutes);
   app.use(ErrorHandler);
 };
 
