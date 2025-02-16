@@ -1,32 +1,31 @@
-import swaggerJSDoc from "swagger-jsdoc";
+import swaggerJsDoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
-import { Express, Application } from "express";
+import { Express } from "express";
+import { signupSchema, signinSchema } from "./swaggerDef";
 
-const swaggerOptions: swaggerJSDoc.Options = {
+const swaggerOptions = {
   definition: {
     openapi: "3.0.0",
     info: {
-      title: "Taxi API",
+      title: "Your API Documentation",
       version: "1.0.0",
-      description: "API documentation for Taxi Management System",
+      description: "API documentation for your system",
     },
-    servers: [
-      {
-        url: "http://localhost:5000",
-        description: "Local server",
+    servers: [{ url: "http://localhost:5000" }],
+    components: {
+      schemas: {
+        Signup: signupSchema,
+        Signin: signinSchema,
       },
-    ],
+    },
   },
   apis: ["./src/API/router/*.ts"],
 };
 
-const swaggerSpec = swaggerJSDoc(swaggerOptions);
+const swaggerDocs = swaggerJsDoc(swaggerOptions);
 
-const setupSwagger = (app: Application) => {
-  app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-  console.log(
-    "Swagger documentation available at: http://localhost:5000/api-docs"
-  );
+const setupSwagger = (app: Express) => {
+  app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 };
 
 export default setupSwagger;

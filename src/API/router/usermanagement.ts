@@ -1,15 +1,26 @@
-import express, { NextFunction, Request, Response, Router } from "express";
-import setupSwagger from "../../config/swagger";
-import { createUser } from "../controller/usermanagement";
+import express, { Request, Response, NextFunction } from "express";
+import { createUser, signinUser } from "../controller/usermanagement";
 
 const router = express.Router();
+
 /**
- * @route  POST /signup
- * @desc   user signup of the system
- * @access Private
+ * @swagger
+ * /signup:
+ *   post:
+ *     $ref: '#/components/schemas/Signup'
  */
 router.post("/signup", (req: Request, res: Response, next: NextFunction) =>
   createUser(req, res, next)
 );
+
+/**
+ * @swagger
+ * /signin:
+ *   post:
+ *     $ref: '#/components/schemas/Signin'
+ */
+router.post("/signin", (req: Request, res: Response, next: NextFunction) => {
+  signinUser(req, res, next);
+});
 
 export default router;

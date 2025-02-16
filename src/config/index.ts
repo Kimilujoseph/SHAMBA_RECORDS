@@ -3,13 +3,15 @@ const envFile =
   process.env.NODE_ENV === "production" ? ".env.production" : ".env";
 dotenv.config({ path: envFile });
 interface configvalue {
-  MONGODB?: string;
-  APP_SECRET?: string;
+  MONGODB: string;
+  APP_SECRET: string;
+  SESSION_SECRET: string;
 }
 
 const configToken: configvalue = {
-  MONGODB: process.env.MONGODB,
-  APP_SECRET: process.env.APP_SECRET,
+  MONGODB: process.env.MONGODB || "mongodb://localhost:27017/safaricarpool",
+  APP_SECRET: process.env.APP_SECRET || "",
+  SESSION_SECRET: process.env.SESSION_SECRET || "S",
 };
 
 export default configToken;

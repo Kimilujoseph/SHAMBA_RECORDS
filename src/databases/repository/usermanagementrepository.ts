@@ -1,14 +1,26 @@
 import { user, UserInterface } from "../model/userSchema";
 import { APIError, STATUS_CODE } from "../../utils/app-error";
+
+interface userDetails {
+  name: string;
+  email: string;
+  password: string;
+  role: string;
+  driverInfo?: {
+    licencePicInfront: string;
+    licencePicBackWard: string;
+    numberPlate: string;
+    vehicleId: Object;
+  };
+  profilePic?: string;
+}
 class userManagementRepository {
   /**
    *
    * @param userDetails contains data for creating a new seller
    * @returns the new created seller
    */
-  async createUser(
-    userDetails: Partial<UserInterface>
-  ): Promise<UserInterface> {
+  async createUser(userDetails: userDetails): Promise<UserInterface> {
     try {
       const userCreated = await user.create(userDetails);
       return userCreated;
@@ -33,9 +45,9 @@ class userManagementRepository {
    * @param email find a user by email
    * @returns user object containg the user data
    */
-  async findUser(email: string) {
-    return await user.findOne({ email });
+  async findUser(email: string): Promise<userDetails | null> {
+    return await user.findOne({ email }).lean();
   }
 }
 
-export { userManagementRepository };
+export { userManagementRepository, userDetails };
