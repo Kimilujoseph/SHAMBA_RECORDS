@@ -1,5 +1,9 @@
 import express, { Request, Response, NextFunction } from "express";
-import { createUser, signinUser } from "../controller/usermanagement";
+import {
+  createUser,
+  signinUser,
+  verifyUser,
+} from "../controller/usermanagement";
 
 const router = express.Router();
 
@@ -22,5 +26,12 @@ router.post("/signup", (req: Request, res: Response, next: NextFunction) =>
 router.post("/signin", (req: Request, res: Response, next: NextFunction) => {
   signinUser(req, res, next);
 });
+
+router.get(
+  "/verification",
+  (req: Request, res: Response, next: NextFunction) => {
+    verifyUser(req, res, next);
+  }
+);
 
 export default router;

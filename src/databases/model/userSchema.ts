@@ -11,7 +11,10 @@ interface UserInterface extends Document {
     numberPlate: string;
     vehicleId: Object;
   };
+  verificationCode: string;
+  isVerified: boolean;
   profilePic?: string;
+  verificationTokenExpiresAt: Date;
 }
 
 const userSchema = new Schema<UserInterface>(
@@ -34,6 +37,16 @@ const userSchema = new Schema<UserInterface>(
     role: {
       type: String,
       required: true,
+    },
+    verificationCode: {
+      type: String,
+    },
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
+    verificationTokenExpiresAt: {
+      type: Date,
     },
     driverInfo: {
       licencePicInfront: { type: String },

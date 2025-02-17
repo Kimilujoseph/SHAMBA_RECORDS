@@ -2,6 +2,7 @@ import { user, UserInterface } from "../model/userSchema";
 import { APIError, STATUS_CODE } from "../../utils/app-error";
 
 interface userDetails {
+  save?(): unknown;
   name: string;
   email: string;
   password: string;
@@ -12,7 +13,10 @@ interface userDetails {
     numberPlate: string;
     vehicleId: Object;
   };
+  verificationCode: string;
+  isVerified: boolean;
   profilePic?: string;
+  verificationTokenExpiresAt: Date;
 }
 class userManagementRepository {
   /**
@@ -46,7 +50,30 @@ class userManagementRepository {
    * @returns user object containg the user data
    */
   async findUser(email: string): Promise<userDetails | null> {
-    return await user.findOne({ email }).lean();
+    try {
+      return await user.findOne({ email }).lean();
+    } catch (err: any) {
+      throw new APIError(
+        "database error",
+        STATUS_CODE.INTERNAL_ERROR,
+        "internal sever error"
+      );
+    }
+  }
+
+  async verifyUserEmail(token: string): Promise<userDetails | null> {
+    try {
+      return await user.findOne({
+        verificationCode: token,
+        verificationTokenExpiresAt: { $gt: Date.now() },
+      });
+    } catch (err: any) {
+      throw new APIError(
+        "database error",
+        STATUS_CODE.INTERNAL_ERROR,
+        "internal server error"
+      );
+    }
   }
 }
 

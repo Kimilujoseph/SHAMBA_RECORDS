@@ -9,7 +9,7 @@ const swaggerOptions = {
     info: {
       title: "Your API Documentation",
       version: "1.0.0",
-      description: "API documentation for your system",
+      description: "API documentation FOR ",
     },
     servers: [{ url: "http://localhost:5000" }],
     components: {
@@ -27,5 +27,8 @@ const swaggerDocs = swaggerJsDoc(swaggerOptions);
 const setupSwagger = (app: Express) => {
   app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 };
+console.log(
+  "Swagger documentation available at: http://localhost:5000/api-docs"
+);
 
 export default setupSwagger;
