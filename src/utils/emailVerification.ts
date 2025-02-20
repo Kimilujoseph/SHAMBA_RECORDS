@@ -1,35 +1,39 @@
-import { Resend } from "resend";
 import configToken from "../config/index";
+import nodemailer from "nodemailer";
 import { VERIFICATION_EMAIL_TEMPLATE } from "./emailtemplates";
 import { STATUS_CODE, APIError } from "./app-error";
-const { RESEND_API } = configToken;
-const resend = new Resend(RESEND_API);
-
+const { EMAIL_PASSWORD, GMAIL_USED } = configToken;
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: GMAIL_USED,
+    pass: EMAIL_PASSWORD,
+  },
+});
 const emailVerification = async (
   email: string,
   verificationCode: string,
   name: string
 ) => {
   try {
-    const verficationLink = `http://localhost:5000/api/user/verifcation?token=${verificationCode}`;
-    const response = await resend.emails.send({
-      from: "EgerDrive <onboarding@resend.dev>",
+    const verificationLink = `http://localhost:5000/api/v1/user/verification?token=${verificationCode}`;
+
+    const emailTemplate = VERIFICATION_EMAIL_TEMPLATE.replace(
+      "{your name}",
+      name
+    ).replace("{verificationLink}", verificationLink);
+
+    // Send email
+    const response = await transporter.sendMail({
+      from: '"EgerDrive" <onboarding@gmail.com>',
       to: email,
       subject: "Verification Email",
-      html: VERIFICATION_EMAIL_TEMPLATE.replace("{your name}", name).replace(
-        "{verificationLink}",
-        verficationLink
-      ),
+      html: emailTemplate,
     });
-    console.log("#$#", response.error);
-    if (!response.data) {
-      throw new APIError(
-        "email verifcation error",
-        STATUS_CODE.BAD_REQUEST,
-        "failed to send email"
-      );
-    }
-    return { success: true, message: "confirm your email for verification" };
+
+    console.log("Email sent: ", response.messageId);
+
+    return { success: true, message: "Confirm your email for verification" };
   } catch (err) {
     console.log("err", err);
     if (err instanceof APIError) {

@@ -1,0 +1,199 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Recruiter {
+  idRecruiter         Int               @unique(map: "idRecruiter_UNIQUE") @default(autoincrement())
+  company_name        String?           @db.VarChar(45)
+  company_logo        String?           @db.VarChar(45)
+  company_description String?           @db.VarChar(45)
+  status              Recruiter_status?
+  createdAt           DateTime?         @default(now()) @db.DateTime(0)
+  updatedAt           DateTime?         @default(now()) @db.DateTime(0)
+  user_id             Int?
+  users_user_id       Int
+  users               users             @relation(fields: [users_user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_Recruiter_users1")
+  job_posting         job_posting[]
+
+  @@id([idRecruiter, users_user_id])
+  @@index([users_user_id], map: "fk_Recruiter_users1_idx")
+}
+
+model application {
+  idapplication         Int                     @id
+  job_posting_id        Int?
+  job_seeker_id         Int?
+  status                application_status?
+  createdAt             DateTime?               @default(now()) @db.DateTime(0)
+  updatedAt             DateTime?               @default(now()) @db.DateTime(0)
+  job_posting           job_posting?            @relation(fields: [job_posting_id], references: [idjob_posting], onDelete: NoAction, onUpdate: NoAction, map: "fk_application_1")
+  job_seeker            job_seeker?             @relation(fields: [job_seeker_id], references: [idjob_seeker], onDelete: NoAction, onUpdate: NoAction, map: "fk_application_2")
+  interview_arrangement interview_arrangement[]
+
+  @@index([job_posting_id], map: "fk_application_1_idx")
+  @@index([job_seeker_id], map: "fk_application_2_idx")
+}
+
+model interview_arrangement {
+  idinterview_arrangement Int                           @id @unique(map: "idinterview_arrangement_UNIQUE")
+  application_id          Int?
+  status                  interview_arrangement_status?
+  scheduled_At            DateTime?                     @default(now()) @db.DateTime(0)
+  application             application?                  @relation(fields: [application_id], references: [idapplication], onDelete: NoAction, onUpdate: NoAction, map: "fk_interview_arrangement_1")
+
+  @@index([application_id], map: "fk_interview_arrangement_1_idx")
+}
+
+model job_posting {
+  idjob_posting        Int                    @id
+  recruiter_id         Int?
+  job_title            String?                @db.VarChar(45)
+  job_description      String?                @db.Text
+  location             String?                @db.VarChar(45)
+  salary_range         String?                @db.VarChar(45)
+  status               job_posting_status?
+  duedate              DateTime?              @default(now()) @db.DateTime(0)
+  createdAt            DateTime?              @default(now()) @db.DateTime(0)
+  application          application[]
+  Recruiter            Recruiter?             @relation(fields: [recruiter_id], references: [idRecruiter], onDelete: NoAction, onUpdate: NoAction, map: "fk_job_posting_1")
+  job_posting_skillset job_posting_skillset[]
+
+  @@index([recruiter_id], map: "fk_job_posting_1_idx")
+}
+
+model job_posting_skillset {
+  idjob_posting_skillset Int                                      @id
+  job_posting_id         Int?
+  skill_id               Int?
+  proffeciency_level     job_posting_skillset_proffeciency_level?
+  skill                  skill?                                   @relation(fields: [skill_id], references: [idskill], onDelete: NoAction, onUpdate: NoAction, map: "fk_job_posting_skillset_1")
+  job_posting            job_posting?                             @relation(fields: [job_posting_id], references: [idjob_posting], onDelete: NoAction, onUpdate: NoAction, map: "fk_job_posting_skillset_2")
+
+  @@index([skill_id], map: "fk_job_posting_skillset_1_idx")
+  @@index([job_posting_id], map: "fk_job_posting_skillset_2_idx")
+}
+
+model job_seeker {
+  idjob_seeker         Int                    @unique(map: "idjob_seeker_UNIQUE") @default(autoincrement())
+  user_id              Int
+  linkedn_url          String?                @db.VarChar(45)
+  github_url           String?                @db.VarChar(45)
+  school_attended      String?                @db.VarChar(45)
+  year_of_joining      Int?
+  year_of_graduation   Int?
+  location             String?                @db.VarChar(45)
+  education            String?                @db.VarChar(45)
+  skill_set            Json?
+  career_aspiration    String?                @db.Text
+  about                String?                @db.Text
+  users_user_id        Int
+  application          application[]
+  users                users                  @relation(fields: [users_user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_job_seeker_users1")
+  job_seeker_skill_set job_seeker_skill_set[]
+  skill_testing        skill_testing[]
+
+  @@id([idjob_seeker, users_user_id])
+  @@index([users_user_id], map: "fk_job_seeker_users1_idx")
+}
+
+model job_seeker_skill_set {
+  idjob_seeker_skill_set Int                                      @id
+  skill_id               Int
+  proffeciency_level     job_seeker_skill_set_proffeciency_level?
+  job_seeker_id          Int?
+  job_seeker             job_seeker?                              @relation(fields: [job_seeker_id], references: [idjob_seeker], onDelete: NoAction, onUpdate: NoAction, map: "fk_job_seeker_skill_set_1")
+  skill                  skill                                    @relation(fields: [skill_id], references: [idskill], onDelete: NoAction, onUpdate: NoAction, map: "fk_job_seeker_skill_set_2")
+
+  @@index([job_seeker_id], map: "fk_job_seeker_skill_set_1_idx")
+  @@index([skill_id], map: "fk_job_seeker_skill_set_2_idx")
+}
+
+model skill {
+  idskill              Int                    @id @unique(map: "idskill_UNIQUE") @default(autoincrement())
+  skill_name           String?                @unique(map: "skill_name_UNIQUE") @db.VarChar(45)
+  createdAt            DateTime?              @default(now()) @db.DateTime(0)
+  updatedAt            DateTime?              @default(now()) @db.DateTime(0)
+  job_posting_skillset job_posting_skillset[]
+  job_seeker_skill_set job_seeker_skill_set[]
+  skill_testing        skill_testing[]
+}
+
+model skill_testing {
+  idskill_testing Int        @id
+  job_seeker_id   Int
+  skill_id        Int?
+  score           Int?
+  takenAt         DateTime?  @default(now()) @db.DateTime(0)
+  job_seeker      job_seeker @relation(fields: [job_seeker_id], references: [idjob_seeker], onDelete: NoAction, onUpdate: NoAction, map: "fk_skill_testing_1")
+  skill           skill?     @relation(fields: [skill_id], references: [idskill], onDelete: NoAction, onUpdate: NoAction, map: "fk_skill_testing_2")
+
+  @@index([job_seeker_id], map: "fk_skill_testing_1_idx")
+  @@index([skill_id], map: "fk_skill_testing_2_idx")
+}
+
+model users {
+  email         String           @unique(map: "email_UNIQUE") @db.VarChar(45)
+  user_type     users_user_type?
+  password      String           @db.VarChar(45)
+  createdAt     DateTime?        @default(now()) @db.DateTime(0)
+  updatedAt     DateTime?        @default(now()) @db.DateTime(0)
+  first_name    String           @default("john") @db.VarChar(45)
+  second_name   String?          @default("doe") @db.VarChar(45)
+  user_id       Int              @id @unique(map: "user_id_UNIQUE")
+  verifyingCode String?          @db.VarChar(255)
+  isVerified    String?          @default("false") @db.VarChar(45)
+  status        users_status?
+  Recruiter     Recruiter[]
+  job_seeker    job_seeker[]
+}
+
+enum users_user_type {
+  job_seeker
+  recruiter
+  admin
+}
+
+enum job_seeker_skill_set_proffeciency_level {
+  intermediate
+  begginer
+  advanced
+}
+
+enum interview_arrangement_status {
+  scheduled
+  completed
+  canceled
+}
+
+enum job_posting_skillset_proffeciency_level {
+  begginer
+  intermediate
+  advanced
+}
+
+enum application_status {
+  pending
+  reviewed
+  accepted
+  rejected
+}
+
+enum Recruiter_status {
+  currently_employing
+  not_employing
+}
+
+enum job_posting_status {
+  open
+  closed
+}
+
+enum users_status {
+  active
+  suspended
+}
