@@ -1,0 +1,61 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"      // or "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String   // hashed
+  role      Role     @default(AGENT)
+  fields    Field[]  @relation("AssignedFields")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+enum Role {
+  ADMIN
+  AGENT
+
+  @@map("roles")
+}
+
+model Field {
+  id           String   @id @default(cuid())
+  name         String
+  cropType     String
+  plantingDate DateTime
+  stage        Stage    @default(PLANTED)
+  notes        String?  // latest observation
+  status       Status?  // computed field, stored for quick querying
+  assignedToId String?  @map("assigned_to_id")
+  assignedTo   User?    @relation("AssignedFields", fields: [assignedToId], references: [id])
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([assignedToId])
+  @@map("fields")
+}
+
+enum Stage {
+  PLANTED
+  GROWING
+  READY
+  HARVESTED
+
+  @@map("stages")
+}
+
+enum Status {
+  ACTIVE
+  AT_RISK
+  COMPLETED
+
+  @@map("statuses")
+}
