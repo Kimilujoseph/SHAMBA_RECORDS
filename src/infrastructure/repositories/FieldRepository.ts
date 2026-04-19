@@ -2,6 +2,7 @@ import { IFieldRepository } from "../../application/interfaces/IFieldRepository"
 import { UpdateFieldDTO } from "../../application/dtos/field.dto";
 import prisma from "../database/client";
 import { Field, Prisma } from "@prisma/client";
+import { FieldStatus } from "../../domain/enums/FieldStatus";
 
 export class FieldRepository implements IFieldRepository {
   async create(data: {
@@ -34,17 +35,15 @@ export class FieldRepository implements IFieldRepository {
   }
 
   async update(id: string, dto: UpdateFieldDTO): Promise<Field> {
+    const updateData: Prisma.FieldUpdateInput = { ...dto };
+
+    if (dto.plantingDate) {
+      updateData.plantingDate = new Date(dto.plantingDate);
+    }
+
     return prisma.field.update({
       where: { id },
-      data: {
-        name: dto.name,
-        cropType: dto.cropType,
-        plantingDate: dto.plantingDate,
-        stage: dto.stage,
-        notes: dto.notes,
-        //status: dto.status,
-        assignedToId: dto.assignedToId,
-      },
+      data: updateData,
       include: {
         assignedTo: { select: { id: true, email: true } },
       },
@@ -53,5 +52,12 @@ export class FieldRepository implements IFieldRepository {
 
   async delete(id: string): Promise<void> {
     await prisma.field.delete({ where: { id } });
+  }
+
+  async updateStatus(id: string, status: FieldStatus): Promise<Field> {
+    return prisma.field.update({
+      where: { id },
+      data: { status },
+    });
   }
 }

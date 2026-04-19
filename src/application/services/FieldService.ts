@@ -9,7 +9,7 @@ export class FieldService {
 
   private async recomputeAndSaveStatus(fieldId: string, stage: Stage, plantingDate: Date): Promise<void> {
     const status = computeFieldStatus(stage, plantingDate);
-    await this.fieldRepository.update(fieldId, { status });
+    await this.fieldRepository.updateStatus(fieldId, status);
   }
 
   async create(dto: CreateFieldDto): Promise<FieldResponseDto> {

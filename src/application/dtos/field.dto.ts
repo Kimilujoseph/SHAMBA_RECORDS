@@ -60,6 +60,5 @@ export type UpdateFieldDTO = Partial<{
   plantingDate: Date;
   stage: Stage;
   notes: string;
-  status: string;
   assignedToId: string | null;
 }>;
