@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 export const createFieldSchema = z.object({
   name: z.string().min(1),
@@ -11,7 +11,8 @@ export const updateFieldSchema = z.object({
   name: z.string().min(1).optional(),
   cropType: z.string().min(1).optional(),
   plantingDate: z.string().datetime().optional(),
-  stage: z.enum(['PLANTED', 'GROWING', 'READY', 'HARVESTED']).optional(),
+  stage: z.enum(["PLANTED", "GROWING", "READY", "HARVESTED"]).optional(),
   notes: z.string().optional(),
+  status: z.enum(["ACTIVE", "AT_RISK", "COMPLETED"]).optional(),
   assignedToId: z.string().nullable().optional(),
 });

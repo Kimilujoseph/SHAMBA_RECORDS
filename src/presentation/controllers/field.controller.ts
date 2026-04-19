@@ -21,18 +21,13 @@ export class FieldController {
   };
 
   getOne = async (req: Request, res: Response) => {
-    const field = await this.fieldService.getById(req.params.id);
+    const field = (req as any).field;
     res.json(field);
   };
 
   update = async (req: Request, res: Response) => {
     const dto: UpdateFieldDto = req.body;
-    const field = await this.fieldService.update(
-      req.params.id,
-      dto,
-      req.user?.id,
-      req.user?.role
-    );
+    const field = await this.fieldService.update(req.params.id, dto);
     res.json(field);
   };
 

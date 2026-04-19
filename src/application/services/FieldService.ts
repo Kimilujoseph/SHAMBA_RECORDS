@@ -26,24 +26,9 @@ export class FieldService {
     return this.toResponseDto(updatedField!);
   }
 
-  async update(id: string, dto: UpdateFieldDto, userId?: string, userRole?: string): Promise<FieldResponseDto> {
+  async update(id: string, dto: UpdateFieldDto): Promise<FieldResponseDto> {
     const field = await this.fieldRepository.findById(id);
     if (!field) throw new FieldNotFoundError();
-
-    // Authorization: Agents can only update stage/notes on assigned fields
-    if (userRole === 'AGENT') {
-      if (field.assignedToId !== userId) {
-        throw new InsufficientPermissionsError('You can only update your own assigned fields');
-      }
-      // Agents can only modify stage and notes
-      const allowedUpdates: (keyof UpdateFieldDto)[] = ['stage', 'notes'];
-      const attemptedUpdates = Object.keys(dto) as (keyof UpdateFieldDto)[];
-      for (const key of attemptedUpdates) {
-        if (!allowedUpdates.includes(key)) {
-          throw new InsufficientPermissionsError(`Agents cannot modify field: ${key}`);
-        }
-      }
-    }
 
     const updateData: any = { ...dto };
     if (dto.plantingDate) updateData.plantingDate = new Date(dto.plantingDate);
