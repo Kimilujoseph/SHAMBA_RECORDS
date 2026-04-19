@@ -18,8 +18,8 @@ export class AuthController {
   login = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const dto: LoginDto = req.body;
-      const result = await this.authService.login(dto);
-      res.json(result);
+      const result = await this.authService.login(dto, res);
+      res.json(result.user);
     } catch (err: any) {
       next(err);
     }

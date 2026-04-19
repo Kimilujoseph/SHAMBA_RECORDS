@@ -3,19 +3,21 @@ import { JwtService } from '../../infrastructure/auth/JwtService';
 import { AuthenticationRequiredError, TokenError } from '../../shared/errors/custom.errors';
 
 export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
-  const authHeader = req.headers.authorization;
-  if (!authHeader) {
+  let token = req.cookies?.jwt; // Try to get token from cookie
+
+  if (!token) {
+    // If no token in cookie, fallback to Authorization header
+    const authHeader = req.headers.authorization;
+    if (authHeader) {
+      const parts = authHeader.split(' ');
+      if (parts.length === 2 && /^Bearer$/i.test(parts[0])) {
+        token = parts[1];
+      }
+    }
+  }
+
+  if (!token) {
     throw new AuthenticationRequiredError('No token provided');
-  }
-
-  const parts = authHeader.split(' ');
-  if (parts.length !== 2) {
-    throw new TokenError('Token error');
-  }
-
-  const [scheme, token] = parts;
-  if (!/^Bearer$/i.test(scheme)) {
-    throw new TokenError('Token malformatted');
   }
 
   try {

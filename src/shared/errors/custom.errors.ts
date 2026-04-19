@@ -1,43 +1,49 @@
-import { AppError } from './AppError';
+import { AppError } from "./AppError";
 
 export class EmailAlreadyInUseError extends AppError {
-  constructor(message: string = 'Email already in use') {
+  constructor(message: string = "Email already in use") {
     super(message, 409); // 409 Conflict
-    this.name = 'EmailAlreadyInUseError';
+    this.name = "EmailAlreadyInUseError";
   }
 }
 
+export class EmailNotFoundError extends AppError {
+  constructor(message: string = "Email not found") {
+    super(message, 404);
+    this.name = "Email does not exist";
+  }
+}
 export class InvalidCredentialsError extends AppError {
-  constructor(message: string = 'Invalid credentials') {
+  constructor(message: string = "Invalid credentials") {
     super(message, 401); // 401 Unauthorized
-    this.name = 'InvalidCredentialsError';
+    this.name = "InvalidCredentialsError";
   }
 }
 
 export class FieldNotFoundError extends AppError {
-  constructor(message: string = 'Field not found') {
+  constructor(message: string = "Field not found") {
     super(message, 404); // 404 Not Found
-    this.name = 'FieldNotFoundError';
+    this.name = "FieldNotFoundError";
   }
 }
 
 export class AuthenticationRequiredError extends AppError {
-  constructor(message: string = 'Authentication required') {
+  constructor(message: string = "Authentication required") {
     super(message, 401); // 401 Unauthorized
-    this.name = 'AuthenticationRequiredError';
+    this.name = "AuthenticationRequiredError";
   }
 }
 
 export class InsufficientPermissionsError extends AppError {
-  constructor(message: string = 'Insufficient permissions') {
+  constructor(message: string = "Insufficient permissions") {
     super(message, 403); // 403 Forbidden
-    this.name = 'InsufficientPermissionsError';
+    this.name = "InsufficientPermissionsError";
   }
 }
 
 export class TokenError extends AppError {
-  constructor(message: string = 'Token error') {
+  constructor(message: string = "Token error") {
     super(message, 401); // 401 Unauthorized
-    this.name = 'TokenError';
+    this.name = "TokenError";
   }
 }

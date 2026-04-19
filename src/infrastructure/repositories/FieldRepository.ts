@@ -1,9 +1,15 @@
-import { IFieldRepository } from '../../application/interfaces/IFieldRepository';
-import prisma from '../database/client';
-import { Field, Stage } from '@prisma/client';
+import { IFieldRepository } from "../../application/interfaces/IFieldRepository";
+import { UpdateFieldDTO } from "../../application/dtos/field.dto";
+import prisma from "../database/client";
+import { Field, Prisma } from "@prisma/client";
 
 export class FieldRepository implements IFieldRepository {
-  async create(data: { name: string; cropType: string; plantingDate: Date; assignedToId?: string }): Promise<Field> {
+  async create(data: {
+    name: string;
+    cropType: string;
+    plantingDate: Date;
+    assignedToId?: string;
+  }): Promise<Field> {
     return prisma.field.create({ data });
   }
 
@@ -27,11 +33,21 @@ export class FieldRepository implements IFieldRepository {
     });
   }
 
-  async update(id: string, data: Partial<Field>): Promise<Field> {
+  async update(id: string, dto: UpdateFieldDTO): Promise<Field> {
     return prisma.field.update({
       where: { id },
-      data,
-      include: { assignedTo: { select: { id: true, email: true } } },
+      data: {
+        name: dto.name,
+        cropType: dto.cropType,
+        plantingDate: dto.plantingDate,
+        stage: dto.stage,
+        notes: dto.notes,
+        //status: dto.status,
+        assignedToId: dto.assignedToId,
+      },
+      include: {
+        assignedTo: { select: { id: true, email: true } },
+      },
     });
   }
 

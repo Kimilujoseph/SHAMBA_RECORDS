@@ -1,7 +1,7 @@
 export interface RegisterDto {
   email: string;
   password: string;
-  role?: 'ADMIN' | 'AGENT';
+  role?: "ADMIN" | "AGENT";
 }
 
 export interface LoginDto {
@@ -15,5 +15,4 @@ export interface AuthResponseDto {
     email: string;
     role: string;
   };
-  token: string;
 }

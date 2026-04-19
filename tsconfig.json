@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "target": "ES6",
-    "module": "commonjs", // Use "esnext" if you're using ES module imports
-    "moduleResolution": "node", // Important for resolving node modules
+    "target": "ES2022",
+    "module": "NodeNext", // Use "esnext" if you're using ES module imports
+    "moduleResolution": "nodenext", // Important for resolving node modules
     "esModuleInterop": true, // Enables default import interoperability with CommonJS
     "outDir": "./dist",
     "strict": true,
