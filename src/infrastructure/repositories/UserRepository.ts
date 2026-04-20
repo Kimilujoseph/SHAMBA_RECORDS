@@ -14,4 +14,9 @@ export class UserRepository implements IUserRepository {
   async create(data: { email: string; password: string; role?: 'ADMIN' | 'AGENT' }): Promise<User> {
     return prisma.user.create({ data });
   }
+
+  async findAll(): Promise<User[]> {
+    return prisma.user.findMany();
+  }
 }
+
