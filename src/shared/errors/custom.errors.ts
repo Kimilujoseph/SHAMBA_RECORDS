@@ -13,6 +13,13 @@ export class EmailNotFoundError extends AppError {
     this.name = "Email does not exist";
   }
 }
+
+export class UserProfileNotFoundError extends AppError {
+  constructor(message: string = "User profile not found") {
+    super(message, 404); // 404 Not Found
+    this.name = "UserProfileNotFoundError";
+  }
+}
 export class InvalidCredentialsError extends AppError {
   constructor(message: string = "Invalid credentials") {
     super(message, 401); // 401 Unauthorized

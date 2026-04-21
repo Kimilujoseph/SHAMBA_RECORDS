@@ -16,3 +16,12 @@ export interface AuthResponseDto {
     role: string;
   };
 }
+
+export interface usersResponseDto {
+  user: {
+    id: string;
+    email: string;
+    role: string;
+    createdAt: Date;
+  };
+}

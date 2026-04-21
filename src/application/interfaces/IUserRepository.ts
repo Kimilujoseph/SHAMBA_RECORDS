@@ -1,8 +1,12 @@
-import { User } from '@prisma/client';
+import { User } from "@prisma/client";
 
 export interface IUserRepository {
   findByEmail(email: string): Promise<User | null>;
   findById(id: string): Promise<User | null>;
-  create(data: { email: string; password: string; role?: 'ADMIN' | 'AGENT' }): Promise<User>;
+  create(data: {
+    email: string;
+    password: string;
+    role?: "ADMIN" | "AGENT";
+  }): Promise<User>;
   findAll(): Promise<User[]>;
 }
