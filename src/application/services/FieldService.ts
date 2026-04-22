@@ -1,13 +1,24 @@
-import { IFieldRepository } from '../interfaces/IFieldRepository';
-import { CreateFieldDto, UpdateFieldDto, FieldResponseDto } from '../dtos/field.dto';
-import { computeFieldStatus } from '../../domain/logic/field-status.logic';
-import { Stage } from '../../domain/enums/Stage';
-import { FieldNotFoundError, InsufficientPermissionsError } from '../../shared/errors/custom.errors';
+import { IFieldRepository } from "../interfaces/IFieldRepository";
+import {
+  CreateFieldDto,
+  UpdateFieldDto,
+  FieldResponseDto,
+} from "../dtos/field.dto";
+import { computeFieldStatus } from "../../domain/logic/field-status.logic";
+import { Stage } from "../../domain/enums/Stage";
+import {
+  FieldNotFoundError,
+  InsufficientPermissionsError,
+} from "../../shared/errors/custom.errors";
 
 export class FieldService {
   constructor(private fieldRepository: IFieldRepository) {}
 
-  private async recomputeAndSaveStatus(fieldId: string, stage: Stage, plantingDate: Date): Promise<void> {
+  private async recomputeAndSaveStatus(
+    fieldId: string,
+    stage: Stage,
+    plantingDate: Date
+  ): Promise<void> {
     const status = computeFieldStatus(stage, plantingDate);
     await this.fieldRepository.updateStatus(fieldId, status);
   }
@@ -21,7 +32,11 @@ export class FieldService {
       assignedToId: dto.assignedToId,
     });
 
-    await this.recomputeAndSaveStatus(field.id, field.stage as Stage, plantingDate);
+    await this.recomputeAndSaveStatus(
+      field.id,
+      field.stage as Stage,
+      plantingDate
+    );
     const updatedField = await this.fieldRepository.findById(field.id);
     return this.toResponseDto(updatedField!);
   }
@@ -34,13 +49,17 @@ export class FieldService {
     if (dto.plantingDate) updateData.plantingDate = new Date(dto.plantingDate);
 
     const stageChanged = dto.stage && dto.stage !== field.stage;
-    const plantingDateChanged = dto.plantingDate && new Date(dto.plantingDate).getTime() !== field.plantingDate.getTime();
+    const plantingDateChanged =
+      dto.plantingDate &&
+      new Date(dto.plantingDate).getTime() !== field.plantingDate.getTime();
 
     const updatedField = await this.fieldRepository.update(id, updateData);
 
     if (stageChanged || plantingDateChanged) {
       const currentStage = (dto.stage as Stage) || (field.stage as Stage);
-      const currentPlantingDate = dto.plantingDate ? new Date(dto.plantingDate) : field.plantingDate;
+      const currentPlantingDate = dto.plantingDate
+        ? new Date(dto.plantingDate)
+        : field.plantingDate;
       await this.recomputeAndSaveStatus(id, currentStage, currentPlantingDate);
     }
 
@@ -58,7 +77,8 @@ export class FieldService {
     const fields = agentId
       ? await this.fieldRepository.findAllByAgent(agentId)
       : await this.fieldRepository.findAll();
-    return fields.map(f => this.toResponseDto(f));
+
+    return fields.map((f) => this.toResponseDto(f));
   }
 
   async delete(id: string): Promise<void> {
@@ -76,7 +96,9 @@ export class FieldService {
       stage: field.stage,
       notes: field.notes,
       status: field.status,
-      assignedTo: field.assignedTo ? { id: field.assignedTo.id, email: field.assignedTo.email } : null,
+      assignedTo: field.assignedTo
+        ? { id: field.assignedTo.id, email: field.assignedTo.email }
+        : null,
       createdAt: field.createdAt,
       updatedAt: field.updatedAt,
     };

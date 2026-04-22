@@ -26,7 +26,7 @@ router.post(
   validate(createFieldSchema),
   controller.create
 );
-router.get("/", requireRole(Role.ADMIN), controller.getAll);
+router.get("/", controller.getAll);
 router.get("/:id", loadField(fieldService), controller.getOne);
 router.put(
   "/:id",
