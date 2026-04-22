@@ -11,6 +11,7 @@ export const validate = (schema: ZodObject<any>) => {
       await schema.parseAsync(req.body);
       next();
     } catch (error) {
+      console.error("Validation error:", error);
       if (error instanceof ZodError) {
         const formattedErrors = error.flatten();
 

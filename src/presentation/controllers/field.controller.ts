@@ -26,6 +26,7 @@ export class FieldController {
   };
 
   update = async (req: Request, res: Response) => {
+    console.log("Updating field with ID:", req.body);
     const dto: UpdateFieldDto = req.body;
     const field = await this.fieldService.update(req.params.id, dto);
     res.json(field);

@@ -14,6 +14,7 @@ export interface AuthResponseDto {
     id: string;
     email: string;
     role: string;
+    createdAt?: Date;
   };
 }
 

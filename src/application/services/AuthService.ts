@@ -27,7 +27,12 @@ export class AuthService {
 
     //const token = JwtService.generateToken({ id: user.id, email: user.email, role: user.role });
     return {
-      user: { id: user.id, email: user.email, role: user.role },
+      user: {
+        id: user.id,
+        email: user.email,
+        role: user.role,
+        createdAt: user.createdAt,
+      },
     };
   }
 

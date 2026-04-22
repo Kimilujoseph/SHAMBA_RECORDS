@@ -12,7 +12,7 @@ export const updateFieldSchema = z.object({
   cropType: z.string().min(1).optional(),
   plantingDate: z.string().datetime().optional(),
   stage: z.enum(["PLANTED", "GROWING", "READY", "HARVESTED"]).optional(),
-  notes: z.string().optional(),
+  notes: z.string().optional() || z.null,
   status: z.enum(["ACTIVE", "AT_RISK", "COMPLETED"]).optional(),
   assignedToId: z.string().nullable().optional(),
 });
