@@ -4,18 +4,18 @@ This repository contains the backend for the Shamba Records application, built w
 
 ## Table of Contents
 
--   [Project Overview](#project-overview)
--   [Prerequisites](#prerequisites)
--   [Getting Started](#getting-started)
-    -   [Installation](#installation)
-    -   [Database Setup](#database-setup)
-        -   [Using a Database Dump File](#using-a-database-dump-file)
-        -   [Creating a New Database with Prisma](#creating-a-new-database-with-prisma)
-    -   [Environment Variables](#environment-variables)
-    -   [Generating a New Hash Token](#generating-a-new-hash-token)
-    -   [Running the Application](#running-the-application)
--   [Project Structure](#project-structure)
--   [Prisma Commands](#prisma-commands)
+- [Project Overview](#project-overview)
+- [Prerequisites](#prerequisites)
+- [Getting Started](#getting-started)
+  - [Installation](#installation)
+  - [Database Setup](#database-setup)
+    - [Using a Database Dump File](#using-a-database-dump-file)
+    - [Creating a New Database with Prisma](#creating-a-new-database-with-prisma)
+  - [Environment Variables](#environment-variables)
+  - [Generating a New Hash Token](#generating-a-new-hash-token)
+  - [Running the Application](#running-the-application)
+- [Project Structure](#project-structure)
+- [Prisma Commands](#prisma-commands)
 
 ## Project Overview
 
@@ -25,18 +25,19 @@ The Shamba Records Backend provides a robust API for managing agricultural recor
 
 Before you begin, ensure you have the following installed:
 
--   **Node.js** (v18 or higher recommended)
--   **npm** (comes with Node.js)
--   **mysql** (or your chosen database system)
--   **Git**
+- **Node.js** (v18 or higher recommended)
+- **npm** (comes with Node.js)
+- **mysql** (or your chosen database system)
+- **Git**
 
 ## Getting Started
 
 ### Installation
 
 1.  **Clone the repository:**
+
     ```bash
-    git clone https://github.com/your-username/shamba_records_backend.git
+    git clone https://github.com/Kimilujoseph/SHAMBA_RECORDS.git
     cd shamba_records_backend
     ```
 
@@ -54,6 +55,7 @@ You have two options for setting up your database: using an existing dump file o
 If you have a MySQL database dump file (e.g., `shamba_records_dump.sql`), you can restore it using the `mysql` command-line tool.
 
 1.  **Create a new MySQL database and user:**
+
     ```bash
     # Connect to MySQL as root or a user with privileges to create databases/users
     mysql -u root -p
@@ -65,6 +67,7 @@ If you have a MySQL database dump file (e.g., `shamba_records_dump.sql`), you ca
     FLUSH PRIVILEGES;
     EXIT;
     ```
+
     Replace `shamba_user` and `your_secure_password` with your desired credentials.
 
 2.  **Restore the dump file:**
@@ -79,7 +82,7 @@ If you have a MySQL database dump file (e.g., `shamba_records_dump.sql`), you ca
 If you prefer to start with a fresh database and apply migrations using Prisma:
 
 1.  **Ensure your database server is running.**
-2.  **Configure your `.env` file** (see [Environment Variables](#environment-variables) section below) with your database connection string, e.g., `DATABASE_URL="postgresql://shamba_user:your_secure_password@localhost:5432/shamba_records?schema=public"`.
+2.  **Configure your `.env` file** (see [Environment Variables](#environment-variables) section below) with your database connection string, e.g., `DATABASE_URL="mysql://shamba_user:your_secure_password@localhost:3306/shamba_records"`.
 3.  **Run Prisma migrations:**
     ```bash
     npx prisma migrate dev --name init
@@ -97,7 +100,7 @@ Here's an illustration of a typical `.env` file:
 PORT=3000
 
 # Database Connection String
-DATABASE_URL="postgresql://shamba_user:your_secure_password@localhost:5432/shamba_records?schema=public"
+DATABASE_URL="mysql://shamba_user:your_secure_password@localhost:3306/shamba_records"
 
 # JWT Secret for authentication
 JWT_SECRET="your_very_long_and_secure_jwt_secret_here"
@@ -117,7 +120,7 @@ For your `JWT_SECRET`, it's crucial to use a strong, randomly generated string. 
 2.  Type `node` and press Enter to enter the Node.js REPL.
 3.  Paste the following command and press Enter:
     ```javascript
-    require('crypto').randomBytes(64).toString('hex')
+    require("crypto").randomBytes(64).toString("hex");
     ```
 4.  Copy the output string and paste it as the value for `JWT_SECRET` in your `.env` file.
 5.  Type `.exit` or press `Ctrl+D` to exit the Node.js REPL.
@@ -163,48 +166,58 @@ src/
 
 **Separation of Concerns:**
 
--   **`domain`**: Contains the enterprise-wide business rules and core logic that are independent of the application or infrastructure.
--   **`application`**: Orchestrates domain objects to fulfill use cases. It defines interfaces that the infrastructure layer must implement.
--   **`infrastructure`**: Provides concrete implementations for interfaces defined in the application layer and handles external concerns (database, file system, external APIs).
--   **`presentation`**: Deals with how the application presents itself to the outside world (e.g., REST API endpoints, request/response handling).
--   **`shared`**: Houses cross-cutting concerns that don't fit neatly into other layers.
+- **`domain`**: Contains the enterprise-wide business rules and core logic that are independent of the application or infrastructure.
+- **`application`**: Orchestrates domain objects to fulfill use cases. It defines interfaces that the infrastructure layer must implement.
+- **`infrastructure`**: Provides concrete implementations for interfaces defined in the application layer and handles external concerns (database, file system, external APIs).
+- **`presentation`**: Deals with how the application presents itself to the outside world (e.g., REST API endpoints, request/response handling).
+- **`shared`**: Houses cross-cutting concerns that don't fit neatly into other layers.
 
 ## Prisma Commands
 
 Prisma is used as the ORM for database interaction. Here are some commonly used Prisma CLI commands:
 
--   **Generate Prisma Client:**
-    ```bash
-    npx prisma generate
-    ```
-    This generates the Prisma Client, which is used to interact with your database. Run this after modifying `prisma/schema.prisma` or installing Prisma.
+- **Generate Prisma Client:**
 
--   **Apply pending migrations and generate client:**
-    ```bash
-    npx prisma migrate dev
-    ```
-    This command creates a new migration if there are changes in your `schema.prisma` and applies all pending migrations to the database. It also generates the Prisma Client.
+  ```bash
+  npx prisma generate
+  ```
 
--   **Push the current schema state to the database (for development without migrations):**
-    ```bash
-    npx prisma db push
-    ```
-    Use this for quick iterations in development when you don't need to preserve existing data or create migrations. **Not recommended for production.**
+  This generates the Prisma Client, which is used to interact with your database. Run this after modifying `prisma/schema.prisma` or installing Prisma.
 
--   **Open Prisma Studio (a visual database browser):**
-    ```bash
-    npx prisma studio
-    ```
-    This opens a web-based UI to view and edit your database data.
+- **Apply pending migrations and generate client:**
 
--   **Format your `schema.prisma` file:**
-    ```bash
-    npx prisma format
-    ```
-    Ensures consistent formatting for your Prisma schema file.
+  ```bash
+  npx prisma migrate dev
+  ```
 
--   **Validate your `schema.prisma` file:**
-    ```bash
-    npx prisma validate
-    ```
-    Checks for errors in your Prisma schema file.
+  This command creates a new migration if there are changes in your `schema.prisma` and applies all pending migrations to the database. It also generates the Prisma Client.
+
+- **Push the current schema state to the database (for development without migrations):**
+
+  ```bash
+  npx prisma db push
+  ```
+
+  Use this for quick iterations in development when you don't need to preserve existing data or create migrations. **Not recommended for production.**
+
+- **Open Prisma Studio (a visual database browser):**
+
+  ```bash
+  npx prisma studio
+  ```
+
+  This opens a web-based UI to view and edit your database data.
+
+- **Format your `schema.prisma` file:**
+
+  ```bash
+  npx prisma format
+  ```
+
+  Ensures consistent formatting for your Prisma schema file.
+
+- **Validate your `schema.prisma` file:**
+  ```bash
+  npx prisma validate
+  ```
+  Checks for errors in your Prisma schema file.
