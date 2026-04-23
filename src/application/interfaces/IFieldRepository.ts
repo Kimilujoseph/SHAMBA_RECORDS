@@ -10,7 +10,7 @@ export interface IFieldRepository {
   }): Promise<FieldInterface>;
   findById(id: string): Promise<FieldInterface | null>;
   findAll(): Promise<FieldInterface[]>;
-  findAllByAgent(agentId: string): Promise<FieldInterface[]>;
+  findAllByAgent(agentId?: string): Promise<FieldInterface[]>;
   update(id: string, data: UpdateFieldDTO): Promise<FieldInterface>;
   updateStatus(id: string, status: FieldStatus): Promise<FieldInterface>;
   delete(id: string): Promise<void>;
